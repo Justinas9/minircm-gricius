@@ -1,0 +1,200 @@
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header">
+      <h4>Įmonės registracija</h4>
+    </div>
+    <div class="card-body">
+      <div class="alert alert-danger mb-3" *ngIf="isError">
+        {{ errorMessage }}
+      </div>
+
+      <form *ngIf="!isLoading" [formGroup]="companyForm" (ngSubmit)="submitForm()">
+
+        <h5 class="mb-3">Įmonės duomenys</h5>
+
+        <div class="mb-3">
+          <label for="companyName" class="form-label">Įmonės pavadinimas *</label>
+          <input
+            type="text"
+            id="companyName"
+            class="form-control"
+            formControlName="companyName"
+            [class.is-invalid]="!companyForm.get('companyName')?.valid && companyForm.get('companyName')?.touched"
+          >
+          <div class="helper-block" *ngIf="!companyForm.get('companyName')?.valid && companyForm.get('companyName')?.touched">
+            Įmonės pavadinimas turi būti nuo 2 iki 30 simbolių
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="companyCode" class="form-label">Įmonės kodas</label>
+          <input
+            type="text"
+            id="companyCode"
+            class="form-control"
+            formControlName="companyCode"
+            placeholder="123456789"
+            [class.is-invalid]="!companyForm.get('companyCode')?.valid && companyForm.get('companyCode')?.touched"
+          >
+          <div class="helper-block" *ngIf="!companyForm.get('companyCode')?.valid && companyForm.get('companyCode')?.touched">
+            Įmonės kodas turi susidaryti tik iš skaičių
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="vatCode" class="form-label">PVM registracijos kodas</label>
+          <input
+            type="text"
+            id="vatCode"
+            class="form-control"
+            formControlName="vatCode"
+            placeholder="LT123456789 arba 123456789"
+            [class.is-invalid]="!companyForm.get('vatCode')?.valid && companyForm.get('vatCode')?.touched"
+          >
+          <div class="helper-block" *ngIf="!companyForm.get('vatCode')?.valid && companyForm.get('vatCode')?.touched">
+            Neteisingo formato pvm kodas
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="address" class="form-label">Adresas</label>
+          <input
+            type="text"
+            id="address"
+            class="form-control"
+            formControlName="address"
+            placeholder="Gedimino pr. 1, Vilnius"
+          >
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label">El. pašto adresas *</label>
+          <input
+            type="email"
+            id="email"
+            class="form-control"
+            formControlName="email"
+            placeholder="info@imone.lt"
+            [class.is-invalid]="!companyForm.get('email')?.valid && companyForm.get('email')?.touched"
+          >
+          <div class="helper-block" *ngIf="!companyForm.get('email')?.valid && companyForm.get('email')?.touched">
+            Įveskite teisinga el. pašto adresą
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="phone" class="form-label">Telefono numeris</label>
+          <input
+            type="text"
+            id="phone"
+            class="form-control"
+            formControlName="phone"
+            placeholder="+37065312345"
+            [class.is-invalid]="!companyForm.get('phone')?.valid && companyForm.get('phone')?.touched"
+          >
+          <div class="helper-block" *ngIf="!companyForm.get('phone')?.valid && companyForm.get('phone')?.touched">
+            Telefono numeris turi būti formatu +37065312345
+          </div>
+        </div>
+
+        <hr class="my-4">
+
+        <!-- KONTAKTAI -->
+        <h5 class="mb-3">Kontaktiniai asmenys</h5>
+
+        <div formArrayName="contacts">
+          <div *ngFor="let contact of contacts.controls; let i=index" class="border p-3 mb-3 rounded">
+            <div [formGroupName]="i">
+              <h6>Kontaktas #{{ i + 1 }}</h6>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Vardas *</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="firstName"
+                    [class.is-invalid]="!contact.get('firstName')?.valid && contact.get('firstName')?.touched"
+                  >
+                  <div class="helper-block" *ngIf="!contact.get('firstName')?.valid && contact.get('firstName')?.touched">
+                    Vardas privalomas (min. 2 simboliai)
+                  </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Pavardė *</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="lastName"
+                    [class.is-invalid]="!contact.get('lastName')?.valid && contact.get('lastName')?.touched"
+                  >
+                  <div class="helper-block" *ngIf="!contact.get('lastName')?.valid && contact.get('lastName')?.touched">
+                    Pavardė privaloma (min. 2 simboliai)
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Pareigos</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="position"
+                    placeholder="Direktorius"
+                  >
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Telefono numeris</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="phoneNumber"
+                    placeholder="+37065312345"
+                    [class.is-invalid]="!contact.get('phoneNumber')?.valid && contact.get('phoneNumber')?.touched"
+                  >
+                  <div class="helper-block" *ngIf="!contact.get('phoneNumber')?.valid && contact.get('phoneNumber')?.touched">
+                    Telefono numeris turi būti formatu +37065312345
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                class="btn btn-danger btn-sm"
+                (click)="removeContact(i)"
+                *ngIf="contacts.length > 1"
+              >
+                Pašalinti kontaktą
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <button type="button" class="btn btn-success" (click)="addContact()">
+            Pridėti kontaktą
+          </button>
+        </div>
+
+        <hr class="my-4">
+
+        <div>
+          <button
+            type="submit"
+            class="btn btn-primary btn-lg"
+            [disabled]="!companyForm.valid"
+          >
+            Registruoti įmonę
+          </button>
+        </div>
+      </form>
+
+      <div class="alert alert-info" *ngIf="isLoading">
+        Informacija keliama į serverį...
+      </div>
+    </div>
+  </div>
+</div>
