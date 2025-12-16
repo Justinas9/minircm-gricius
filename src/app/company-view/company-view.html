@@ -1,0 +1,84 @@
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">Įmonės informacija</h4>
+      <a routerLink="/companies" class="btn btn-secondary">Grįžti į sąrašą</a>
+    </div>
+
+    <div class="card-body">
+
+      <div class="alert alert-danger" *ngIf="error$ | async as error">
+        {{ error }}
+      </div>
+
+      <div class="alert alert-info" *ngIf="loading$ | async">
+        Duomenys kraunami...
+      </div>
+
+      <ng-container *ngIf="company$ | async as company">
+
+        <div *ngIf="company">
+
+          <h5 class="mb-3">Įmonės duomenys</h5>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <strong>Įmonės pavadinimas:</strong>
+              <p>{{ company.companyName }}</p>
+            </div>
+            <div class="col-md-6">
+              <strong>Įmonės kodas:</strong>
+              <p>{{ company.companyCode || '-' }}</p>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <strong>PVM kodas:</strong>
+              <p>{{ company.vatCode || '-' }}</p>
+            </div>
+            <div class="col-md-6">
+              <strong>Adresas:</strong>
+              <p>{{ company.address || '-' }}</p>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <strong>El. paštas:</strong>
+              <p><a [href]="'mailto:' + company.email">{{ company.email }}</a></p>
+            </div>
+            <div class="col-md-6">
+              <strong>Telefonas:</strong>
+              <p><a [href]="'tel:' + company.phone">{{ company.phone || '-' }}</a></p>
+            </div>
+          </div>
+
+          <hr>
+
+          <h5>Kontaktiniai asmenys</h5>
+
+          <div *ngIf="company.contacts?.length; else noContacts">
+            <div class="card mb-2" *ngFor="let c of company.contacts; let i = index">
+              <div class="card-body">
+                <strong>Kontaktas #{{ i + 1 }}</strong>
+                <p>{{ c.firstName }} {{ c.lastName }}</p>
+                <p>Pareigos: {{ c.position || '-' }}</p>
+                <p>Telefonas: {{ c.phoneNumber || '-' }}</p>
+              </div>
+            </div>
+          </div>
+
+          <ng-template #noContacts>
+            <div class="alert alert-info">
+              Kontaktinių asmenų nėra
+            </div>
+          </ng-template>
+
+        </div>
+
+      </ng-container>
+
+    </div>
+  </div>
+</div>

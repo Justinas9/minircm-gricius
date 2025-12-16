@@ -1,0 +1,64 @@
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">Įmonių sąrašas</h4>
+      <a routerLink="/add-company" class="btn btn-primary">Pridėti naują įmonę</a>
+    </div>
+
+    <div class="card-body">
+
+      <div class="alert alert-danger" *ngIf="error$ | async as error">
+        {{ error }}
+      </div>
+
+      <div class="alert alert-info" *ngIf="loading$ | async">
+        Duomenys kraunami iš duomenų bazės...
+      </div>
+
+      <ng-container *ngIf="companies$ | async as companies">
+
+        <div *ngIf="companies.length === 0 && !(loading$ | async)" class="alert alert-warning">
+          Įmonių sąraše nėra įrašų.
+          <a routerLink="/add-company">Pridėkite pirmą įmonę</a>
+        </div>
+
+        <div class="table-responsive" *ngIf="companies.length > 0">
+          <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+              <th>Pavadinimas</th>
+              <th>Įmonės kodas</th>
+              <th>El. paštas</th>
+              <th>Telefonas</th>
+              <th>Kontaktų sk.</th>
+              <th>Veiksmai</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let company of companies">
+              <td>{{ company.companyName }}</td>
+              <td>{{ company.companyCode || '-' }}</td>
+              <td>{{ company.email }}</td>
+              <td>{{ company.phone || '-' }}</td>
+              <td>{{ company.contacts?.length || 0 }}</td>
+              <td>
+                <a
+                  [routerLink]="['/company', company.id]"
+                  class="btn btn-sm btn-info me-2">
+                  Peržiūrėti
+                </a>
+                <button
+                  class="btn btn-sm btn-danger"
+                  (click)="deleteCompany(company.id)">
+                  Ištrinti
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </ng-container>
+    </div>
+  </div>
+</div>

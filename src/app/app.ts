@@ -1,13 +1,14 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { CompanyFormComponent } from './company-form/company-form';
+import { HeaderComponent } from './header/header';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CompanyFormComponent],
+  standalone: true,
+  imports: [RouterOutlet, HeaderComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class AppComponent {
-  protected readonly title = signal('minircm-gricius');
+  title = 'minircm-gricius';
 }

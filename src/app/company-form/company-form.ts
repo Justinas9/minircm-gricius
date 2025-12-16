@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormArray } from '@angular/forms';
+import { CompanyService } from '../company-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-company-form',
@@ -14,8 +16,13 @@ export class CompanyFormComponent {
   isLoading = false;
   isError = false;
   errorMessage = '';
+  successMessage = '';
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private companyService: CompanyService,
+    private router: Router
+  ) {
     this.companyForm = this.fb.group({
       companyName: ['', [
         Validators.required,
@@ -71,20 +78,33 @@ export class CompanyFormComponent {
 
   submitForm(): void {
     if (this.companyForm.valid) {
+      this.isLoading = true;
+      this.isError = false;
+      this.errorMessage = '';
+      this.successMessage = '';
+
       console.log(this.companyForm.value);
 
-      this.isLoading = true;
-      setTimeout(() => {
-        this.isLoading = false;
-        alert('f12');
-        this.companyForm.reset();
-        while (this.contacts.length > 1) {
-          this.contacts.removeAt(1);
+      this.companyService.addCompany(this.companyForm.value).subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          this.successMessage = 'Įmonė sėkmingai užregistruota!';
+          console.log('Įmonė išsaugota su ID:', (response as {name: string}).name);
+
+          setTimeout(() => {
+            this.router.navigate(['/companies']);
+          }, 2000);
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.isError = true;
+          this.errorMessage = 'Nepavyko išsaugoti įmonės duomenų. Patikrinkite interneto ryšį ir bandykite dar kartą.';
+          console.error('Klaida saugant įmonę:', error);
         }
-      }, 1000);
+      });
     } else {
       this.isError = true;
-      this.errorMessage = 'Prašome užpildyti visus privalomus laukus';
+      this.errorMessage = 'Prašome užpildyti visus privalomus laukus teisingai';
       setTimeout(() => {
         this.isError = false;
       }, 3000);
