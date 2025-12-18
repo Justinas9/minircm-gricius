@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './header/header';
+import { AuthService } from './auth.service';
 
 @Component({
   selector: 'app-root',
@@ -9,6 +10,12 @@ import { HeaderComponent } from './header/header';
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'minircm-gricius';
+
+  constructor(private authService: AuthService) {}
+
+  ngOnInit(): void {
+    this.authService.autoLogin();
+  }
 }
